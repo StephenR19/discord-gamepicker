@@ -264,20 +264,20 @@ def nuke_playcounts(server_id: str) -> bool:
 
     Returns True if any changes were made.
     """
+    # Get all games for the server
+    games_list = get_all_server_games(server_id)
+    if not games_list:
+        return False
+
+    # Mark all GameLog entries for these games as ignored
+    any_logs_updated = False
+    for game in games_list:
+        if mark_game_logs_as_ignored(server_id, game.name):
+            any_logs_updated = True
+
+    # Reset playcount_offset to 0 for all games
     with get_session() as session:
-        # Get all games for the server
-        games = session.query(Game).filter_by(server_id=server_id).all()
-        if not games:
-            return False
-
-        game_ids = [game.id for game in games]
-
-        # Mark all GameLog entries for these games as ignored
-        updated_logs = session.query(GameLog).filter(GameLog.game_id.in_(game_ids)).update({"ignored": 1}, synchronize_session=False)
-
-        # Reset playcount_offset to 0 for all games
         updated_offsets = session.query(Game).filter(Game.server_id == server_id).update({"playcount_offset": 0}, synchronize_session=False)
-
         session.commit()
 
-        return updated_logs > 0 or updated_offsets > 0
+    return any_logs_updated or updated_offsets > 0
