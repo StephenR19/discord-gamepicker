@@ -26,10 +26,23 @@ class NukeConfirmationView(ui.View):
 
         # Acknowledge the action
         if result:
-            # Create public success embed
+            ascii_art = """```
+     _.-^^---....,,--       
+ _--                  --_  
+<                        >)
+|                         | 
+ \._                   _./  
+    '''--. . , ; .--'''       
+          | |   |             
+       .-=||  | |=-.   
+       `-=#$%&%$#=-'   
+          | ;  :|     
+ _____.,-#%&$@%#&#~,._____```
+"""
             embed = discord.Embed(
                 title="Playcounts Nuked",
-                description="All playcounts have been reset to zero. The wheel will now show all games equally.",
+                description="All playcounts have been reset to zero. The wheel will now show all games equally."
+                            f"{ascii_art}",
                 color=discord.Color.green()
             )
             embed.add_field(name="Requested by", value=self.requester_name, inline=True)
@@ -40,7 +53,10 @@ class NukeConfirmationView(ui.View):
             )
 
             # Send public message
-            await interaction.channel.send(embed=embed)
+            await interaction.response.edit_message(
+                embed=embed,
+                view=None
+            )
 
             await interaction.response.edit_message(
                 content="Nuke approved and executed.",
@@ -57,7 +73,7 @@ class NukeConfirmationView(ui.View):
     @discord.ui.button(label="No, cancel", style=discord.ButtonStyle.secondary)
     async def cancel(self, interaction: Interaction, button: Button):
         await interaction.response.edit_message(
-            content="Nuke canceled.",
+            content="Nuke cancelled.",
             embed=None,
             view=None
         )
