@@ -95,14 +95,13 @@ class NukeCog(commands.Cog):
         # Send confirmation message with buttons
         embed = discord.Embed(
             title="Are you sure you want to nuke all playcounts?",
-            description="This will reset the played count for all games to zero, allowing the wheel to show all games equally. Play history will be preserved but ignored. Proceed with caution.",
+            description="This will reset the played count for all games to zero, allowing the wheel to show all games equally. Play history will be preserved but ignored. Proceed with caution. This request must be approved by another server member.",
             color=discord.Color.red()
         )
         embed.add_field(name="Requested by", value=interaction.user.display_name, inline=True)
         await interaction.response.send_message(
             embed=embed,
-            view=view,
-            ephemeral=True
+            view=view
         )
 
 
