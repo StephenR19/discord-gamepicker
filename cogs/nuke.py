@@ -57,12 +57,6 @@ class NukeConfirmationView(ui.View):
                 embed=embed,
                 view=None
             )
-
-            await interaction.response.edit_message(
-                content="Nuke approved and executed.",
-                embed=None,
-                view=None
-            )
         else:
             await interaction.response.edit_message(
                 content="There was a problem resetting the playcounts. Please check logs and report errors or try again.",
